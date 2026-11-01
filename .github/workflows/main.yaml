@@ -1,0 +1,22 @@
+name: Run n9.js
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Allows you to run it manually from the GitHub website
+
+jobs:
+  run-node-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Specify your version of Node
+
+    - name: Run script
+      run: node n9.js
