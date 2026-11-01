@@ -24,7 +24,8 @@ db.serialize(() => {
 
 async function runInventoryCheck() {
     console.log('Launching headless browser...');
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'] });
     const page = await browser.newPage();
 
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:157.0) Gecko/20100101 Firefox/157.0');
