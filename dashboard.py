@@ -156,9 +156,14 @@ else:
   )
   display_df["price"] = display_df["price"].astype(str).str.strip()
 
-    # Assuming your dataframe is named 'df' and the timestamp column is 'timestamp'
   # 1. Convert string to datetime
-  display_df['timestamp'] = pd.to_datetime(display_df['timestamp'])
+  #display_df['timestamp'] = pd.to_datetime(display_df['timestamp'])
+
+  # 1. Convert string to datetime safely, turning bad/empty strings into NaT
+  display_df['timestamp'] = pd.to_datetime(display_df['timestamp'], errors='coerce')
+
+  # Fill any missing/NaT timestamps with a placeholder string or current time to prevent blank rows
+  display_df['timestamp'] = display_df['timestamp'].fillna(pd.Timestamp.now())
 
   # 2. Handle timezone conversion safely (localizing only if naive, or converting directly if already aware)
   if display_df['timestamp'].dt.tz is None:
