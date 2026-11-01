@@ -156,38 +156,32 @@ else:
   )
   display_df["price"] = display_df["price"].astype(str).str.strip()
 
+    # Try converting to datetime safely; if any fail, keep the original text instead of turning to 'none'
+  try:
+      parsed_dates = pd.to_datetime(display_df['timestamp'], errors='coerce', utc=True)
+    # Format only the valid dates into CST Day mm/dd/yy hh:mm
+      valid_mask = parsed_dates.notna()
+      display_df.loc[valid_mask, 'timestamp'] = (
+          parsed_dates[valid_mask]
+          .dt.tz_convert('America/Chicago')
+          .dt.strftime('%a %m/%d/%y %H:%M')
+      )
+  except Exception:
+    # Fallback: leave the original timestamp string untouched if parsing fails
+      pass
+    
   # 1. Convert string to datetime, coerce errors, and force UTC timezone awareness
-  display_df['timestamp'] = pd.to_datetime(display_df['timestamp'], errors='coerce', utc=True)
+  # display_df['timestamp'] = pd.to_datetime(display_df['timestamp'], errors='coerce', utc=True)
 
 # 2. Convert directly to Central Time (America/Chicago)
-  display_df['timestamp_cst'] = display_df['timestamp'].dt.tz_convert('America/Chicago')
+  # display_df['timestamp_cst'] = display_df['timestamp'].dt.tz_convert('America/Chicago')
 
 # 3. Format into: Day mm/dd/yy hh:mm (e.g., Sun 11/01/26 09:30)
-  display_df['timestamp'] = display_df['timestamp_cst'].dt.strftime('%a %m/%d/%y %H:%M')
-
-# 4. Drop the redundant helper column
-  display_df = display_df.drop(columns=['timestamp_cst'], errors='ignore')
-
-  # 1. Convert string to datetime
-  #display_df['timestamp'] = pd.to_datetime(display_df['timestamp'])
-
-  # 1. Convert string to datetime safely, turning bad/empty strings into NaT
-  # display_df['timestamp'] = pd.to_datetime(display_df['timestamp'], errors='coerce')
-
-  # Fill any missing/NaT timestamps with a placeholder string or current time to prevent blank rows
-  # display_df['timestamp'] = display_df['timestamp'].fillna(pd.Timestamp.now())
-
-  # 2. Handle timezone conversion safely (localizing only if naive, or converting directly if already aware)
-  # if display_df['timestamp'].dt.tz is None:
-      # display_df['timestamp_cst'] = display_df['timestamp'].dt.tz_localize('UTC').dt.tz_convert('America/Chicago')
-  # else:
-      # display_df['timestamp_cst'] = display_df['timestamp'].dt.tz_convert('America/Chicago')
-
-  # 3. Format into: Day mm/dd/yy hh:mm (e.g., Sun 11/01/26 09:30)
   # display_df['timestamp'] = display_df['timestamp_cst'].dt.strftime('%a %m/%d/%y %H:%M')
 
-  # 1. Drop the temporary or redundant helper column if it exists
+# 4. Drop the redundant helper column
   # display_df = display_df.drop(columns=['timestamp_cst'], errors='ignore')
+
 
   # Apply color styling using .map() (compatible with modern pandas)
   def color_status(val):
