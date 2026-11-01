@@ -158,14 +158,14 @@ else:
 
     # Assuming your dataframe is named 'df' and the timestamp column is 'timestamp'
 # 1. Convert string to datetime and localize to UTC
-display_df['timestamp'] = pd.to_datetime(df['timestamp'])
+display_df['timestamp'] = pd.to_datetime(display_df['timestamp'])
 
 # 2. Convert UTC to CST (Central Time)
 # Note: CST is UTC-6 (or use 'America/Chicago' if pandas has tzdata installed)
-display_df['timestamp_cst'] = df['timestamp'].dt.tz_localize('UTC').dt.tz_convert('America/Chicago')
+display_df['timestamp_cst'] = display_df['timestamp'].dt.tz_localize('UTC').dt.tz_convert('America/Chicago')
 
 # 3. Format into: Day mm/dd/yy hh:mm (e.g., Sun 11/01/26 09:30)
-display_df['formatted_date'] = df['timestamp_cst'].dt.strftime('%a %m/%d/%y %H:%M')
+display_df['formatted_date'] = display_df['timestamp_cst'].dt.strftime('%a %m/%d/%y %H:%M')
 
   # Apply color styling using .map() (compatible with modern pandas)
   def color_status(val):
