@@ -3,7 +3,7 @@ name: Run n9.js
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: # Allows you to run it manually from the GitHub website
+  workflow_dispatch:
 
 jobs:
   run-node-script:
@@ -16,7 +16,14 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20' # Specify your version of Node
+        node-version: '20'
+
+    - name: Install dependencies and rebuild sqlite3
+      run: |
+        npm install
+        npm rebuild sqlite3
+    - name: Install Puppeteer Browser
+      run: npx puppeteer browsers install chrome
 
     - name: Run script
       run: node n9.js
