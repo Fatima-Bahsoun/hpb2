@@ -169,6 +169,9 @@ else:
   # 3. Format into: Day mm/dd/yy hh:mm (e.g., Sun 11/01/26 09:30)
   display_df['timestamp'] = display_df['timestamp_cst'].dt.strftime('%a %m/%d/%y %H:%M')
 
+  # 1. Drop the temporary or redundant helper column if it exists
+  display_df = display_df.drop(columns=['timestamp_cst'], errors='ignore')
+
   # Apply color styling using .map() (compatible with modern pandas)
   def color_status(val):
     if val == "added":
