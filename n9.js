@@ -1,4 +1,6 @@
 const puppeteer = require('puppeteer');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+puppeteer.use(StealthPlugin());
 
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
@@ -21,16 +23,21 @@ db.serialize(() => {
         qty INTEGER
     )`);
 });
-
-async function runInventoryCheck() {
-    console.log('Launching headless browser...');
+    
+    async function runInventoryCheck() {
+        console.log('Launching headless browser...');
+        const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    /*
     const browser = await puppeteer.launch({ headless: true,
         args: [
             '--no-sandbox', 
             '--disable-setuid-sandbox',
             '--disable-blink-features=AutomationControlled'
         ]
-    });
+    });*/
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     await page.setViewport({ width: 1280, height: 800 });
