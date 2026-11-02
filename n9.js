@@ -25,10 +25,18 @@ db.serialize(() => {
 async function runInventoryCheck() {
     console.log('Launching headless browser...');
     const browser = await puppeteer.launch({ headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+        args: [
+            '--no-sandbox', 
+            '--disable-setuid-sandbox',
+            '--disable-blink-features=AutomationControlled'
+        ]
+    });
     const page = await browser.newPage();
-
-    await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:157.0) Gecko/20100101 Firefox/157.0');
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+    await page.setViewport({ width: 1280, height: 800 });
+    
+    // const page = await browser.newPage();
+    // await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:157.0) Gecko/20100101 Firefox/157.0');
 
     const searchUrl = 'https://www.hpb.com/search?q=Aoyama%2C+Gosho&prefn1=subjectLevel1&prefv1=Book';
     console.log(`Navigating to HPB search page...`);
