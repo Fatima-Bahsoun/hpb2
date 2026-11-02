@@ -42,6 +42,8 @@ async function runInventoryCheck() {
     console.log(`Navigating to HPB search page...`);
     await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 60000 });
 
+    await page.screenshot({ path: 'debug-page.png', fullPage: true });
+    
     const productsMap = new Map();
     const tiles = await page.$$('.product-tile, [data-pid]');
     
